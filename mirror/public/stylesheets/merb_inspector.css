@@ -1,0 +1,87 @@
+table.data-mapper-collection {
+border-collapse:collapse;
+}
+
+
+table.data-mapper-collection th {
+background-color: #555;
+text-align: left;
+}
+
+table.data-mapper-collection th a,
+table.data-mapper-collection th p {
+font: bold 11px arial, sans-serif;
+display: block;
+background-color: #555;
+}
+
+table.data-mapper-collection th a {
+color: #fff;
+padding: 2px 15px 2px 5px;
+}
+
+table.data-mapper-collection th p {
+color: #eee;
+padding: 2px 5px;
+}
+
+table.data-mapper-collection th a:hover {
+background-color: #000;
+color: #ff8;
+}
+
+table.data-mapper-collection > tbody > tr.record td {
+background-color: #E6F2FF;
+}
+
+table.data-mapper-collection > tbody > tr.record > td {
+padding: 5px 4px;
+color: #333;
+font-family: Verdana, sans-serif;
+font-size: 11px;
+border-bottom: solid 1px #C5DBF7;
+border-left: solid 1px #C5DBF7;
+}
+
+table.data-mapper-collection > tbody > tr.even-record td {
+background-color: #fff;
+}
+
+table.data-mapper-collection > tbody > tr.even-record > td {
+border-left: solid 1px #ddd;
+}
+
+table.data-mapper-collection > tbody >  tr.record > td.sorted {
+background-color: #B9DCFF;
+border-bottom: solid 1px #AFD0F5;
+}
+
+table.data-mapper-collection > tbody >  tr.even-record > td.sorted {
+background-color: #E6F2FF;
+border-bottom: solid 1px #AFD0F5;
+}
+
+
+
+.record table
+{
+        background-color: #fff;
+        border-collapse: collapse;
+        border-spacing: 0px;
+}
+.record table th
+{
+        background-color: #dee7ec;
+        border: 1px solid #8cacbb;
+        padding: 3px;
+}
+.record table td
+{
+        border: 1px solid #8cacbb;
+        padding: 3px;
+}
+
+table.logical th,
+table.logical td {
+        border: 0px;
+}

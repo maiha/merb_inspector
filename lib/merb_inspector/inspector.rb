@@ -55,6 +55,33 @@ module Merb
       message = "[Inspector] %s" % message.to_s.strip
       File.open(path, "a+") {|f| f.puts message}
     end
+
+    ######################################################################
+    ### Install
+
+    def self.install
+      mirror("public/stylesheets")
+    end
+
+    def self.mirror(dir)
+      source_dir = File.join(File.dirname(__FILE__), '..', '..', 'mirror', dir)
+      target_dir = File.join(Merb.root, dir)
+      FileUtils.mkdir_p(target_dir) unless File.exist?(target_dir)
+
+      Dir[source_dir + "/*"].each do |src|
+        time = File.mtime(src)
+        file = File.basename(src)
+        dst  = File.join(target_dir, file)
+
+        next if File.directory?(src)
+        next if File.exist?(dst) and File.mtime(dst) >= time
+        FileUtils.copy(src, dst)
+        File.utime(time, time, dst)
+        command = File.exist?(dst) ? "update" : "install"
+        log "#{command}: #{dir}/#{file}"
+      end
+    end
+
   end
 end
 
