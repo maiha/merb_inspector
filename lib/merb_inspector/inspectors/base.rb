@@ -1,6 +1,6 @@
 module Merb
   module Inspectors
-    class Base
+    class Base < Application
       class << self
         def register(klass)
           Merb::Inspector.register(klass, self)

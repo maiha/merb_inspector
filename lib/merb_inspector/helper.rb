@@ -1,5 +1,5 @@
 module Merb
-  module Inspector
+  class Inspector
     module Helper
       def inspect(object = nil, options = {})
         return super() unless object
