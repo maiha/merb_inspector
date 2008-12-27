@@ -3,7 +3,7 @@ module Merb
     module DataMapper
       module Resourceful
         def resource_name
-          model.name.demodulize.plural.underscore
+          model.name.demodulize.plural.snake_case
         end
 
         def link_to_new(label = 'New', opts = {})

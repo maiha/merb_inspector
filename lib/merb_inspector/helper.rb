@@ -42,7 +42,7 @@ module Merb
       def xxx_form_for(name, attrs = {}, &blk)
         if !attrs[:action] and defined?(DataMapper::Resource) and name.is_a?(DataMapper::Resource)
           if name.new_record?
-            model  = name.class.name.demodulize.underscore.pluralize.intern
+            model  = name.class.name.demodulize.snake_case.pluralize.intern
             attrs[:action] = resource(model, :new)
           else
             attrs[:action] = resource(name)

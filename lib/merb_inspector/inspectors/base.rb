@@ -21,7 +21,7 @@ module Merb
 
       private
         def name
-          self.class.name.sub(/^Merb::Inspectors::/,'').sub(/Inspector$/,'').underscore
+          self.class.name.sub(/^Merb::Inspectors::/,'').sub(/Inspector$/,'').snake_case.gsub(/::/, '/')
         end
 
         def dir

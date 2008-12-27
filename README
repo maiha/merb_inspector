@@ -8,7 +8,11 @@ Just inspect your objects! No longer need to prepare views, scaffold and paginat
 Setup
 =====
 
-include css and js in your view or layout files
+1. load gem at the bottom of config/dependencies.rb
+
+  dependency "merb_inspector"
+
+2. include css and js in your view or layout files
 
   <%= css_include_tag "merb_inspector.css" -%>
   <%= js_include_tag  "jquery.js" -%>
