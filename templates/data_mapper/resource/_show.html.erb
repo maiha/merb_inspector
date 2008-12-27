@@ -1,0 +1,13 @@
+<div>
+<table class="record show">
+  <tbody>
+<%- columns.each do |p| -%>
+    <tr>
+      <th><%= column_header(p) %></th>
+      <td><%=h column_value(record, p) %></td>
+    </tr>
+<%- end -%>
+  </tbody>
+</table>
+</div>
+

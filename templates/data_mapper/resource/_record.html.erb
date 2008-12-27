@@ -1,0 +1,42 @@
+<div id="<%=id%>">
+
+<div id="<%=id%>_show" class="record show" style="display:<%= edit ? 'none' : 'display' %>">
+<table>
+  <tbody>
+<%- inspector.columns.each do |p| -%>
+    <tr>
+      <th><%= column_header(p) %></th>
+      <td><%=h column_value(record, p) %></td>
+    </tr>
+<%- end -%>
+    <tr>
+      <td colspan=2 align=center>
+        <%= link_to "edit", "#", :onclick=>toggle %>
+      </td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div id="<%=id%>_edit" class="record edit" style="display:<%= edit ? 'display' : 'none' %>">
+<%= form_for record, :action=>save_action do %>
+<table>
+  <tbody>
+<%- inspector.columns.each do |p| -%>
+    <tr>
+      <th><%= column_header(p) %></th>
+      <td><%= column_form(record, p) %></td>
+    </tr>
+<%- end -%>
+    <tr>
+      <td colspan=2 align=center>
+        <%= submit (record.new_record? ? "create" : "update").t %>
+        <%= link_to "cancel", "#", :onclick=>toggle %>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<% end =%>
+</div>
+</div>
+

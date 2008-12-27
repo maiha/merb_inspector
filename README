@@ -1,0 +1,11 @@
+merb_inspector
+==============
+
+A plugin for the Merb framework that provides "inspect" helper.
+Just inspect your objects! No longer need to prepare views, scaffold and pagination.
+
+
+
+Copyright (c) 2008 maiha@wota.jp, released under the MIT license
+
+
