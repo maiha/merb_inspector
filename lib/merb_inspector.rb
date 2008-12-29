@@ -27,7 +27,7 @@ if defined?(Merb::Plugins)
 #       include Merb::Inspector::Helper
 #     end
 
-    Merb::Inspector.install
+    Merb::Inspector::Manager.install
   end
   
   Merb::Plugins.add_rakefiles "merb_inspector/merbtasks"
