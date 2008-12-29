@@ -10,7 +10,7 @@ Setup
 
 1. load gem at the bottom of config/dependencies.rb
 
-  dependency "merb_inspector"
+  require "merb_inspector"
 
 2. include css and js in your view or layout files
 
@@ -24,9 +24,14 @@ Example
 just *inspect* the object you want to know!
 
   <%= inspect [1, :hello] %>
+  <%= inspect ENV.to_hash %>
   <%= inspect User.all(:limit=>10) %>
   <%= inspect @item %>
   ...
+
+of course you can see available inspectors as following
+
+  <%= inspect Merb::Inspector::Manager.stores %>
 
 
 Copyright (c) 2008 maiha@wota.jp, released under the MIT license
