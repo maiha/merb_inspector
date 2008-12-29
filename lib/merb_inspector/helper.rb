@@ -9,7 +9,6 @@ module Merb
         options[:level]     ||= 1
         options[:max_level] ||= 3
 
-        inspector_class = BasicInspector if object == self
         inspector_class = BasicInspector if options[:level] >= options[:max_level]
         inspector_class ||= Manager.lookup(object) || Merb::Inspector.default
 
