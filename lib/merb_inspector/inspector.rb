@@ -1,5 +1,5 @@
 module Merb
-  class Inspector < Application
+  class Inspector < Merb::Controller
     ######################################################################
     ### for exceptins
 

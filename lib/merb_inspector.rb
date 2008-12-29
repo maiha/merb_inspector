@@ -9,19 +9,18 @@ if defined?(Merb::Plugins)
   }
   
   Merb::BootLoader.before_app_loads do
-  end
-  
-  Merb::BootLoader.after_app_loads do
     require "merb_inspector" / "inspector"
     require "merb_inspector" / "manager"
     require "merb_inspector" / "helper"
-
+  end
+  
+  Merb::BootLoader.after_app_loads do
     Merb::Inspector::Manager.reset
     Merb::Inspector::Manager.install
 
-    class ::Application
-      include Merb::Inspector::Helper
-    end
+#     class ::Application
+#       include Merb::Inspector::Helper
+#     end
   end
   
   Merb::Plugins.add_rakefiles "merb_inspector/merbtasks"
