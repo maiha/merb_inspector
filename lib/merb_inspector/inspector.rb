@@ -5,52 +5,22 @@ module Merb
     ######################################################################
     ### for module
 
-    cattr_accessor :stores
-    cattr_accessor :caches
-
-    self.stores = Hash.new
-    self.caches = Hash.new
-
     def self.root
-      @root ||= File.expand_path(File.dirname(__FILE__) + "/../../")
+      @root ||= Pathname(File.expand_path(File.dirname(__FILE__) + "/../../"))
     end
 
     def self.default
       Inspector
     end
 
-    def self.reset
-      self.caches = Hash.new
-    end
-
-    def self.register(klass, inspector)
-      raise "#{klass} inspector already setup" if stores.has_key?(klass)
-      stores[klass] = inspector
-      log "registered %s -> %s" % [klass, inspector]
-    end
-
-    def self.lookup(object)
-      if caches.has_key?(object.class)
-        log "lookup: %s => %s (cached)" % [object.class, caches[object.class] || 'nil']
-        return caches[object.class]
-      end
-      klass = object.class.ancestors.find{|klass|
-        log "lookup:   %s = %s ... %s" % [object.class, klass, stores[klass]]
-        stores.has_key?(klass)
-      }
-      caches[object.class] = stores[klass]
-      if klass
-        log "lookup: %s => %s (registered)" % [object.class, caches[object.class]]
-      else
-        log "lookup: %s => nil (registered as negative cache)" % [object.class]
-      end
-      return stores[klass]
-    end
-
     def self.log(message)
       path = Merb.root / "log" / "inspector.log"
       message = "[Inspector] %s" % message.to_s.strip
       File.open(path, "a+") {|f| f.puts message}
+    end
+
+    def self.register(*args)
+      Merb::Inspector::Manager.register(*args)
     end
 
     ######################################################################
@@ -86,7 +56,7 @@ module Merb
       @object  = object
       @options = options
 
-      return "[%s]" % h(@object.inspect)
+      return "(merb inspector)[%s]" % h(@object.inspect)
     end
 
     private
@@ -113,47 +83,6 @@ module Merb
       def basic_options
         {:inspector=>self, :options=>@options, :dir=>dir, :id=>@object.object_id}
       end
-  end
-
-  class Inspector
-    module Helper
-      def inspect(object = nil, options = {})
-        return super() unless object
-        options = {:action=>options} unless options.is_a?(Hash)
-        action  = options[:action] || :show
-        inspector = Merb::Inspector.lookup(object) || Merb::Inspector.default
-        inspector.new(Merb::Request.new({})).send(action, object, options)
-      end
-
-      def column_header(p)
-        label = p.name.to_s
-        h(label)
-#       link_to label, "#", :onclick=>"return false;"
-      end
-
-      def column_value(record, p)
-        h(record.send p.name.to_s)
-      end
-
-      def column_form(record, p)
-        # first, search class prefixed method that user override
-        method = "#{record.class.name.demodulize}_#{p.name}_form"
-        return send(method, record, p) if respond_to?(method, true)
-
-        # second, search method that user override
-        method = "#{p.name}_form"
-        return send(method, record, p) if respond_to?(method, true)
-
-        # second, guess form from property type
-        if p.type == DataMapper::Types::Serial
-          record.send p.name
-        elsif p.type == DataMapper::Types::Text
-          text_area p.name
-        else
-          text_field p.name
-        end
-      end
-    end
   end
 
   def self.inspector

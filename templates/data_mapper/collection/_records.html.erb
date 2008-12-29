@@ -2,7 +2,7 @@
 <table class="data-mapper-collection">
   <thead>
     <tr>
-<%- inspector.columns.each do |p| -%>
+<%- columns.each do |p| -%>
       <th><p><%= column_header(p) %></p></th>
 <%- end -%>
       <th></th>
@@ -15,14 +15,14 @@ tr_class = (i % 2 == 0) ? "even-record" : ""
 tr_class += " #{list_row_class(record)}" if respond_to? :list_row_class
 -%>
     <tr class="record <%=tr_class%>">
-<%- inspector.columns.each do |p| -%>
+<%- columns.each do |p| -%>
       <td><%=h column_value(record, p) %></td>
 <%- end -%>
       <td>
         <table class="logical">
           <tr>
-            <td><%= inspector.link_to_show(record) %></td>
-            <td><%= inspector.link_to_edit(record) %></td>
+            <td><%= link_to_show(record) %></td>
+            <td><%= link_to_edit(record) %></td>
             <td><%# delete_button(article, "Delete #{article.title}") %></td>
           </tr>
         </table>
@@ -32,7 +32,7 @@ tr_class += " #{list_row_class(record)}" if respond_to? :list_row_class
   </tbody>
 </table>
  
-<%= inspector.link_to_new 'New' %>
+<%= link_to_new 'New' %>
 
 </div>
 

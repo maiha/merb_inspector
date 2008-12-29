@@ -1,6 +1,6 @@
-<div id="<%=id%>">
+<div id="<%=record_id%>">
 
-<div id="<%=id%>_show" class="record show" style="display:<%= edit ? 'none' : 'display' %>">
+<div id="<%=record_id%>_show" class="record show" style="display:<%= edit ? 'none' : 'display' %>">
 <table>
   <tbody>
 <%- inspector.columns.each do |p| -%>
@@ -18,7 +18,7 @@
 </table>
 </div>
 
-<div id="<%=id%>_edit" class="record edit" style="display:<%= edit ? 'display' : 'none' %>">
+<div id="<%=record_id%>_edit" class="record edit" style="display:<%= edit ? 'display' : 'none' %>">
 <%= form_for record, :action=>save_action do %>
 <table>
   <tbody>

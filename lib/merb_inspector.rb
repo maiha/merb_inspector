@@ -14,7 +14,8 @@ if defined?(Merb::Plugins)
   
   Merb::BootLoader.after_app_loads do
     require "merb_inspector" / "inspector"
-#    require "merb_inspector" / "helper"
+    require "merb_inspector" / "manager"
+    require "merb_inspector" / "helper"
 #  require "merb_inspector" / "inspectors" / "base"
     require "merb_inspector" / "inspectors" / "data_mapper" if defined?(DataMapper)
 

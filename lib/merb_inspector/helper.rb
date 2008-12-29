@@ -3,8 +3,10 @@ module Merb
     module Helper
       def inspect(object = nil, options = {})
         return super() unless object
-        inspector = Merb::Inspector.lookup(object) || Merb::Inspector.default
-        inspector.new(object, self, options).execute
+        options = {:action=>options} if options.is_a?(Symbol)
+        action    = options[:action] || :show
+        inspector = (Manager.lookup(object) || Merb::Inspector.default).new(Merb::Request.new({}))
+        inspector.send action, object, options
       end
 
       def column_header(p)
@@ -19,7 +21,7 @@ module Merb
 
       def column_form(record, p)
         # first, search class prefixed method that user override
-        method = "#{record.class.name.demodulize}_#{p.name}_form"
+        method = "#{Extlib::Inflection.demodulize(record.class.name)}_#{p.name}_form"
         return send(method, record, p) if respond_to?(method, true)
 
         # second, search method that user override
@@ -27,28 +29,13 @@ module Merb
         return send(method, record, p) if respond_to?(method, true)
 
         # second, guess form from property type
-        if p.type == DataMapper::Types::Serial
+        if p.type == ::DataMapper::Types::Serial
           record.send p.name
-        elsif p.type == DataMapper::Types::Text
+        elsif p.type == ::DataMapper::Types::Text
           text_area p.name
         else
           text_field p.name
         end
-      end
-
-      ######################################################################
-      ### Patch for broken merb methods
-
-      def xxx_form_for(name, attrs = {}, &blk)
-        if !attrs[:action] and defined?(DataMapper::Resource) and name.is_a?(DataMapper::Resource)
-          if name.new_record?
-            model  = name.class.name.demodulize.snake_case.pluralize.intern
-            attrs[:action] = resource(model, :new)
-          else
-            attrs[:action] = resource(name)
-          end
-        end
-        super(name, attrs, &blk)
       end
     end
   end

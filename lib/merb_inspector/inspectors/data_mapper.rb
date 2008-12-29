@@ -5,7 +5,7 @@ class DataMapper::ResourceInspector < Merb::Inspector
     @object  = object
     @options = options
 
-    partial template, current_options
+    partial absolute_template, current_options
   end
 
   def columns
@@ -26,6 +26,10 @@ class DataMapper::ResourceInspector < Merb::Inspector
       @object.class
     end
 
+    def absolute_template
+      Merb::Inspector.root + "templates" + name + template
+    end
+
     def template
       if @options[:action].to_s == 'new'
         "new"
@@ -39,7 +43,7 @@ class DataMapper::ResourceInspector < Merb::Inspector
     end
 
     def toggle
-      "$('##{id} .record').toggle();return false;"
+      "$('##{record_id} .record').toggle();return false;"
     end
 
     def save_action
@@ -58,50 +62,43 @@ class DataMapper::ResourceInspector < Merb::Inspector
     ### Resourceful
 
     def resource_name
-      model.name.demodulize.plural.snake_case
+      Extlib::Inflection.demodulize(model.name).plural.snake_case
     end
 
     def link_to_new(label = 'New', opts = {})
-      @caller.link_to label, @caller.resource(resource_name, :new), opts
+      link_to label, resource(resource_name, :new), opts
     rescue Merb::Router::GenerationError
     end
 
     def link_to_show(record = @object, label = 'Show', opts = {})
-      @caller.link_to label, @caller.resource(record), opts
+      link_to label, resource(record), opts
     rescue Merb::Router::GenerationError
     end
 
     def link_to_edit(record = @object, label = 'Edit', opts = {})
-      @caller.link_to label, @caller.resource(record, :edit), opts
+      link_to label, resource(record, :edit), opts
     rescue Merb::Router::GenerationError
     end
-
 end
 
-__END__
 
-        register ::DataMapper::Collection
-        include  Resourceful
+class DataMapper::CollectionInspector < DataMapper::ResourceInspector
+  register ::DataMapper::Collection, self
 
-        def execute
-          partial "records"
-        end
-
-        def columns
-          @object.properties
-        end
-
-        private
-          def model
-            @object.query.model
-          end
-
-          def options
-            {:model=>model, :records=>@object}
-          end
-      end
-
-      end
-    end
+  def columns
+    @object.properties
   end
+
+  private
+    def model
+      @object.query.model
+    end
+
+    def options
+      {:model=>model, :records=>@object}
+    end
+
+    def template
+      "records"
+    end
 end
