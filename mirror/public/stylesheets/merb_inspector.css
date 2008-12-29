@@ -1,3 +1,7 @@
+span.nowrap {
+  white-space: nowrap;
+}
+
 table.inspector {
 border-collapse:collapse;
 }

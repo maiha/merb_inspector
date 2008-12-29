@@ -23,6 +23,14 @@ module Merb
       Merb::Inspector::Manager.register(model, inspector)
     end
 
+    def self.lead(options = {})
+      @lead_options = options
+    end
+
+    def self.lead_options
+      @lead_options
+    end
+
     def show(object, options = {})
       @object  = object
       @options = options
@@ -40,7 +48,7 @@ module Merb
       end
 
       def toggle
-        "$('##{dom_id} .reversible').toggle();return false;"
+        "$('##{dom_id} > .reversible').toggle();return false;"
       end
 
       def dir
@@ -51,8 +59,37 @@ module Merb
         dir + name.to_s
       end
 
-      def execute
+      def main
         partial template_for(template), current_options
+      end
+
+      def execute
+        if self.class.lead_options
+          wrapped_main
+        else
+          main
+        end
+      end
+
+      def close_lead_label
+        "[x]"
+      end
+
+      def lead_size
+        sizes = Array((self.class.lead_options || {})[:size]).compact
+        sizes[level-1] || sizes[-1] || 15
+      end
+
+      def lead
+        "<span class=nowrap>%s</span>" % h(@object.inspect.truncate(lead_size))
+      end
+
+      def link_to_lead
+        link_to close_lead_label, "#", :onclick=>toggle
+      end
+
+      def link_to_main
+        link_to lead, "#", :onclick=>toggle
       end
 
       def template
@@ -67,12 +104,30 @@ module Merb
         {}
       end
 
+      def level
+        @options[:level]
+      end
+
       def basic_options
-        {:options=>@options, :level=>@options[:level]}
+        {:options=>@options, :level=>level}
       end
 
       def child_options
         {:level=>@options[:level]+1}
+      end
+
+      def wrapped_main
+        <<-HTML
+<div id="#{dom_id}">
+  <div id="#{dom_id}_lead" class="reversible" style="display:block;">
+    #{link_to_main}
+  </div>
+  <div id="#{dom_id}_main" class="reversible" style="display:none;">
+    <div style="float:right;">#{link_to_lead}</div>
+    #{main}
+  </div>
+</div>
+        HTML
       end
   end
 
@@ -80,4 +135,3 @@ module Merb
     Merb::Inspector
   end
 end
-
