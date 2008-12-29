@@ -18,9 +18,9 @@ class DataMapper::ResourceInspector < Merb::Inspector
       model.properties
     end
 
-    def record_id
+    def dom_id
       oid = @object.new_record? ? "new" : @object.id
-      "#{resource_name}_#{oid}"
+      "#{resource_name}-#{oid}"
     end
 
     def template
@@ -29,10 +29,6 @@ class DataMapper::ResourceInspector < Merb::Inspector
       else
         "record"
       end
-    end
-
-    def toggle
-      "$('##{record_id} .record').toggle();return false;"
     end
 
     def save_action

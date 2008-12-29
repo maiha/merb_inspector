@@ -35,6 +35,14 @@ module Merb
         self.class.name.sub(/^Merb::/,'').sub(/Inspector$/,'').snake_case.gsub(/::/, '/')
       end
 
+      def dom_id
+        @object.class.name.plural.snake_case.gsub(/::/,'-') + '-' + @object.object_id.to_s
+      end
+
+      def toggle
+        "$('##{dom_id} .reversible').toggle();return false;"
+      end
+
       def dir
         Merb::Inspector.root + "templates" + name
       end
@@ -60,7 +68,11 @@ module Merb
       end
 
       def basic_options
-        {:inspector=>self, :options=>@options, :dir=>dir, :id=>@object.object_id}
+        {:options=>@options, :level=>@options[:level]}
+      end
+
+      def child_options
+        {:level=>@options[:level]+1}
       end
   end
 

@@ -1,3 +1,7 @@
+<div id="<%= dom_id %>">
+
+<div id="<%= dom_id %>_level1" class="reversible" style="display:<%= (level == 1) ? 'display' : 'none' %>">
+<div style="float:right;"><%= link_to "[x]", "#", :onclick=>toggle %></div>
 <table class="inspector">
 <tr>
   <th><p>index</p></th>
@@ -7,12 +11,19 @@
 <%- @object.each_with_index do |obj, i| -%>
 <%-
 tr_class = (i % 2 == 0) ? "even-record" : ""
-tr_class += " #{list_row_class(record)}" if respond_to? :list_row_class
+tr_class += " #{list_row_class(obj)}" if respond_to? :list_row_class
 -%>
 <tr class="record <%=tr_class%>">
-  <td><%=i+1%></td>
-  <td><%=h obj.inspect %></td>
+  <td align=center><%=i+1%></td>
+  <td><%= inspect obj, child_options %></td>
   <td><%=h obj.class.name %></td>
 </tr>
 <%- end -%>
 </table>
+</div>
+
+<div id="<%= dom_id %>_level2" class="reversible" style="display:<%= (level == 1) ? 'none' : 'display' %>">
+<%= link_to h(@object.inspect.truncate), "#", :onclick=>toggle %>
+</div>
+
+</div>
