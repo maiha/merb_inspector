@@ -9,11 +9,30 @@ module Merb
         attr_accessor :caches
       end
 
-      self.stores = Hash.new
-      self.caches = Hash.new
-
       def self.reset
+        self.stores = Hash.new
         self.caches = Hash.new
+
+        File.unlink Merb.root / "log" / "inspector.log"
+        load_builtin_inspectors
+      end
+
+      def self.load_builtin_inspectors
+        inspector_dir = File.dirname(__FILE__) / "../../inspectors"
+        Dir["#{inspector_dir}/*.rb"].sort.each do |file|
+          begin
+            require file
+          rescue Exeption  => error
+            message = "[MerbInspector] load error: #{error} (#{error.class})"
+            Merb.logger.error message
+          end
+        end
+      end
+
+      def self.log(message)
+        path = Merb.root / "log" / "inspector.log"
+        message = "[Inspector] %s" % message.to_s.strip
+        File.open(path, "a+") {|f| f.puts message}
       end
 
       def self.register(klass, inspector)
@@ -38,12 +57,6 @@ module Merb
           log "lookup: %s => nil (registered as negative cache)" % [object.class]
         end
         return stores[klass]
-      end
-
-      def self.log(message)
-        path = Merb.root / "log" / "inspector.log"
-        message = "[Inspector] %s" % message.to_s.strip
-        File.open(path, "a+") {|f| f.puts message}
       end
 
       ######################################################################

@@ -16,18 +16,12 @@ module Merb
       Inspector
     end
 
-    def self.log(message)
-      path = Merb.root / "log" / "inspector.log"
-      message = "[Inspector] %s" % message.to_s.strip
-      File.open(path, "a+") {|f| f.puts message}
-    end
+    ######################################################################
+    ### for class
 
     def self.model(model, inspector = self)
       Merb::Inspector::Manager.register(model, inspector)
     end
-
-    ######################################################################
-    ### for class
 
     def show(object, options = {})
       @object  = object
