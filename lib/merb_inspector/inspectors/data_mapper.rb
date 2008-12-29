@@ -1,5 +1,5 @@
 class DataMapper::ResourceInspector < Merb::Inspector
-  register ::DataMapper::Resource, self
+  model ::DataMapper::Resource
 
   def execute
     partial template_for(template), current_options
@@ -11,6 +11,14 @@ class DataMapper::ResourceInspector < Merb::Inspector
 
   def edit_columns
     columns.reject{|p| p.type == ::DataMapper::Types::Serial}
+  end
+
+  def edit(object, options = {})
+    @object  = object
+    @options = options
+    @mode    = :edit
+
+    execute
   end
 
   private
@@ -31,10 +39,6 @@ class DataMapper::ResourceInspector < Merb::Inspector
       end
     end
 
-    def edit
-      %w( new edit ).include?(@options[:action].to_s)
-    end
-
     def toggle
       "$('##{record_id} .record').toggle();return false;"
     end
@@ -48,7 +52,7 @@ class DataMapper::ResourceInspector < Merb::Inspector
     end
 
     def options
-      {:model=>model, :record=>@object, :edit=>edit, :save_action=>save_action, :toggle=>toggle}
+      {:model=>model, :record=>@object, :save_action=>save_action, :toggle=>toggle}
     end
 
     ######################################################################
@@ -76,7 +80,7 @@ end
 
 
 class DataMapper::CollectionInspector < DataMapper::ResourceInspector
-  register ::DataMapper::Collection, self
+  model ::DataMapper::Collection
 
   def columns
     @object.properties

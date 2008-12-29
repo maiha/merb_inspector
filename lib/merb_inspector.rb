@@ -16,16 +16,11 @@ if defined?(Merb::Plugins)
     require "merb_inspector" / "inspector"
     require "merb_inspector" / "manager"
     require "merb_inspector" / "helper"
-#  require "merb_inspector" / "inspectors" / "base"
     require "merb_inspector" / "inspectors" / "data_mapper" if defined?(DataMapper)
 
     class ::Application
       include Merb::Inspector::Helper
     end
-
-#     module ::Merb::GlobalHelpers
-#       include Merb::Inspector::Helper
-#     end
 
     Merb::Inspector::Manager.install
   end

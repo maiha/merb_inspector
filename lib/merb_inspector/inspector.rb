@@ -1,7 +1,5 @@
 module Merb
   class Inspector < Application
-#    include Merb::Inspector::Helper
-
     ######################################################################
     ### for module
 
@@ -19,8 +17,8 @@ module Merb
       File.open(path, "a+") {|f| f.puts message}
     end
 
-    def self.register(*args)
-      Merb::Inspector::Manager.register(*args)
+    def self.model(model, inspector = self)
+      Merb::Inspector::Manager.register(model, inspector)
     end
 
     ######################################################################
