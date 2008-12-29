@@ -10,13 +10,15 @@ if defined?(Merb::Plugins)
   
   Merb::BootLoader.before_app_loads do
     require "merb_inspector" / "inspector"
+    require "merb_inspector" / "builtin"
     require "merb_inspector" / "manager"
     require "merb_inspector" / "helper"
+
+    Merb::Inspector::Manager.reset
+    Merb::Inspector::Manager.install
   end
   
   Merb::BootLoader.after_app_loads do
-    Merb::Inspector::Manager.reset
-    Merb::Inspector::Manager.install
 
 #     class ::Application
 #       include Merb::Inspector::Helper

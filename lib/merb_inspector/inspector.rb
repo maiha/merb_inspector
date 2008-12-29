@@ -25,6 +25,10 @@ module Merb
       end
     end
 
+    def self.builtin
+      include Merb::Inspector::Builtin
+    end
+
     def self.lead(options = {})
       @lead_options = options
     end
@@ -53,12 +57,8 @@ module Merb
         "$('##{dom_id} > .reversible').toggle();return false;"
       end
 
-      def dir
-        Merb::Inspector.root + "templates" + name
-      end
-
       def template_for(name)
-        dir + name.to_s
+        name.to_s
       end
 
       def main

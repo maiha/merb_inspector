@@ -5,7 +5,7 @@ require 'merb-core'
 require 'merb-core/tasks/merb'
 
 GEM_NAME    = "merb_inspector"
-GEM_VERSION = "0.2.5.1"
+GEM_VERSION = "0.2.6"
 AUTHOR      = "Maiha"
 EMAIL       = "maiha@wota.jp"
 HOMEPAGE    = "http://github.com/maiha/merb_inspector"

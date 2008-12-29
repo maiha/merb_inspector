@@ -1,4 +1,5 @@
 class DataMapper::ResourceInspector < Merb::Inspector
+  builtin
   model ::DataMapper::Resource
 
   def edit(object, options = {})
@@ -100,6 +101,7 @@ end
 
 
 class DataMapper::CollectionInspector < DataMapper::ResourceInspector
+  builtin
   model ::DataMapper::Collection
 
   private

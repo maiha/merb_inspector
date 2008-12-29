@@ -37,9 +37,9 @@ module Merb
       end
 
       def self.register(klass, inspector)
-        raise "#{klass} inspector already setup" if stores.has_key?(klass)
+        action = stores.has_key?(klass) ? "overridden" : "registered"
         stores[klass] = inspector
-        log "registered %s -> %s" % [klass, inspector]
+        log "%s %s -> %s" % [action, klass, inspector]
       end
 
       def self.lookup(object)

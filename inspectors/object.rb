@@ -1,4 +1,5 @@
 class ObjectInspector < Merb::Inspector
+  builtin
   private
     def template
       if instance_variables.empty?
