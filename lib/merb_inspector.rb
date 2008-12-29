@@ -18,8 +18,15 @@ if defined?(Merb::Plugins)
     require "merb_inspector" / "inspector"
     require "merb_inspector" / "manager"
     require "merb_inspector" / "helper"
-    require inspector_dir / "array"
-    require inspector_dir / "data_mapper" if defined?(DataMapper)
+
+    Dir["#{inspector_dir}/*.rb"].sort.each do |file|
+      begin
+        require file
+      rescue Exeption  => error
+        message = "[MerbInspector] load error: #{error} (#{error.class})"
+        Merb.logger.error message
+      end
+    end
 
     class ::Application
       include Merb::Inspector::Helper
