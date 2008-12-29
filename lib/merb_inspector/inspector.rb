@@ -13,14 +13,16 @@ module Merb
     end
 
     def self.default
-      Inspector
+      ObjectInspector
     end
 
     ######################################################################
     ### for class
 
-    def self.model(model, inspector = self)
-      Merb::Inspector::Manager.register(model, inspector)
+    def self.model(*models)
+      models.each do |model|
+        Merb::Inspector::Manager.register(model, self)
+      end
     end
 
     def self.lead(options = {})
@@ -113,7 +115,7 @@ module Merb
       end
 
       def child_options
-        {:level=>@options[:level]+1}
+        {:level=>@options[:level]+1, :max_level=>@options[:max_level]}
       end
 
       def wrapped_main

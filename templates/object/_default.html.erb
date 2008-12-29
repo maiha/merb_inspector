@@ -1,0 +1,19 @@
+<table class="inspector">
+<tr>
+  <th><p>key</p></th>
+  <th><p>value</p></th>
+  <th><p>type</p></th>
+</tr>
+<%- @object.instance_variables.sort.each_with_index do |key, i| -%>
+<%-   obj = @object.instance_variable_get(key) -%>
+<%-
+tr_class = (i % 2 == 0) ? "even-record" : ""
+tr_class += " #{list_row_class(obj)}" if respond_to? :list_row_class
+-%>
+<tr class="record <%=tr_class%>">
+  <td><%=h key %></td>
+  <td><%#h obj.inspect %><%= inspect obj, child_options rescue "error" %></td>
+  <td><%=h obj.class.name %></td>
+</tr>
+<%- end -%>
+</table>

@@ -2,13 +2,18 @@ module Merb
   class Inspector
     module Helper
       def inspect(object = nil, options = {})
-        return super() unless object
+        return h(super()) unless object
 
         options = options.is_a?(Hash) ? options : {:action=>options}
-        options[:action] ||= :show
-        options[:level]  ||= 1
-        inspector = (Manager.lookup(object) || Merb::Inspector.default).new(Merb::Request.new({}))
+        options[:action]    ||= :show
+        options[:level]     ||= 1
+        options[:max_level] ||= 3
 
+        inspector_class = BasicInspector if object == self
+        inspector_class = BasicInspector if options[:level] >= options[:max_level]
+        inspector_class ||= Manager.lookup(object) || Merb::Inspector.default
+
+        inspector = inspector_class.new(Merb::Request.new({}))
         if inspector.respond_to?(options[:action])
           inspector.send options[:action], object, options
         else

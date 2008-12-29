@@ -13,7 +13,8 @@ module Merb
         self.stores = Hash.new
         self.caches = Hash.new
 
-        File.unlink Merb.root / "log" / "inspector.log"
+        log = Merb.root / "log" / "inspector.log"
+        File.unlink log if File.exist?(log)
         load_builtin_inspectors
       end
 
@@ -22,8 +23,8 @@ module Merb
         Dir["#{inspector_dir}/*.rb"].sort.each do |file|
           begin
             require file
-          rescue Exeption  => error
-            message = "[MerbInspector] load error: #{error} (#{error.class})"
+          rescue Exception => error
+            message = "[MerbInspector] load error: #{error} (#{error.class})\n#{error.backtraces.first rescue nil}"
             Merb.logger.error message
           end
         end
