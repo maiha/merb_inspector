@@ -1,6 +1,11 @@
 module Merb
   class Inspector < Application
     ######################################################################
+    ### for exceptins
+
+    class Merb::Inspector::ActionNotFound < Merb::ControllerExceptions::ActionNotFound; end
+
+    ######################################################################
     ### for module
 
     def self.root
@@ -31,13 +36,9 @@ module Merb
       execute
     end
 
-    def execute
-      return "(merb inspector)[%s]" % h(@object.inspect)
-    end
-
     private
       def name
-        self.class.name.sub(/^Merb::Inspectors::/,'').sub(/Inspector$/,'').snake_case.gsub(/::/, '/')
+        self.class.name.sub(/^Merb::/,'').sub(/Inspector$/,'').snake_case.gsub(/::/, '/')
       end
 
       def dir
@@ -45,7 +46,15 @@ module Merb
       end
 
       def template_for(name)
-        dir + name
+        dir + name.to_s
+      end
+
+      def execute
+        partial template_for(template), current_options
+      end
+
+      def template
+        :default
       end
 
       def current_options

@@ -2,7 +2,7 @@
 <div id="<%=record_id%>_show" class="record show" style="display:<%= (@mode == :edit) ? 'none' : 'display' %>">
 <table>
   <tbody>
-<%- inspector.columns.each do |p| -%>
+<%- columns.each do |p| -%>
     <tr>
       <th><%= column_header(p) %></th>
       <td><%=h column_value(record, p) %></td>
@@ -21,7 +21,7 @@
 <%= form_for record, :action=>save_action do %>
 <table>
   <tbody>
-<%- inspector.columns.each do |p| -%>
+<%- columns.each do |p| -%>
     <tr>
       <th><%= column_header(p) %></th>
       <td><%= column_form(record, p) %></td>
@@ -30,7 +30,7 @@
     <tr>
       <td colspan=2 align=center>
         <%= submit (record.new_record? ? "create" : "update").t %>
-        <%= link_to "cancel", "#", :onclick=>toggle %>
+        <%= link_to "cancel", "#", :onclick=>toggle unless record.new_record? %>
       </td>
     </tr>
   </tbody>

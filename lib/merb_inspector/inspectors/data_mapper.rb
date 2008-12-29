@@ -1,18 +1,6 @@
 class DataMapper::ResourceInspector < Merb::Inspector
   model ::DataMapper::Resource
 
-  def execute
-    partial template_for(template), current_options
-  end
-
-  def columns
-    model.properties
-  end
-
-  def edit_columns
-    columns.reject{|p| p.type == ::DataMapper::Types::Serial}
-  end
-
   def edit(object, options = {})
     @object  = object
     @options = options
@@ -22,13 +10,17 @@ class DataMapper::ResourceInspector < Merb::Inspector
   end
 
   private
+    def model
+      @object.class
+    end
+
+    def columns
+      model.properties
+    end
+
     def record_id
       oid = @object.new_record? ? "new" : @object.id
       "#{resource_name}_#{oid}"
-    end
-
-    def model
-      @object.class
     end
 
     def template
@@ -82,13 +74,13 @@ end
 class DataMapper::CollectionInspector < DataMapper::ResourceInspector
   model ::DataMapper::Collection
 
-  def columns
-    @object.properties
-  end
-
   private
     def model
       @object.query.model
+    end
+
+    def columns
+      @object.properties
     end
 
     def options
