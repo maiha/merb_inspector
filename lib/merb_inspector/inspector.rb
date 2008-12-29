@@ -56,6 +56,10 @@ module Merb
       @object  = object
       @options = options
 
+      execute
+    end
+
+    def execute
       return "(merb inspector)[%s]" % h(@object.inspect)
     end
 
@@ -65,11 +69,11 @@ module Merb
       end
 
       def dir
-        File.join Merb::Inspector.root, "templates", name
+        Merb::Inspector.root + "templates" + name
       end
 
       def template_for(name)
-        File.join dir, name
+        dir + name
       end
 
       def current_options

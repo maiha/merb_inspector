@@ -1,11 +1,8 @@
 class DataMapper::ResourceInspector < Merb::Inspector
   register ::DataMapper::Resource, self
 
-  def show(object, options = {})
-    @object  = object
-    @options = options
-
-    partial absolute_template, current_options
+  def execute
+    partial template_for(template), current_options
   end
 
   def columns
@@ -24,10 +21,6 @@ class DataMapper::ResourceInspector < Merb::Inspector
 
     def model
       @object.class
-    end
-
-    def absolute_template
-      Merb::Inspector.root + "templates" + name + template
     end
 
     def template
