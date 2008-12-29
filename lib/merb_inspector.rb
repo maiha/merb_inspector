@@ -13,10 +13,13 @@ if defined?(Merb::Plugins)
   end
   
   Merb::BootLoader.after_app_loads do
+    inspector_dir = File.dirname(__FILE__) / "../inspectors"
+
     require "merb_inspector" / "inspector"
     require "merb_inspector" / "manager"
     require "merb_inspector" / "helper"
-    require "merb_inspector" / "inspectors" / "data_mapper" if defined?(DataMapper)
+    require inspector_dir / "array"
+    require inspector_dir / "data_mapper" if defined?(DataMapper)
 
     class ::Application
       include Merb::Inspector::Helper
