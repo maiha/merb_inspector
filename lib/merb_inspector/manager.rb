@@ -43,10 +43,19 @@ module Merb
       end
 
       def self.lookup(object)
+        # first, search object itself for mainly class stuff
+        if stores.has_key?(object)
+          log "lookup: %s => %s" % [object, stores[object]]
+          return stores[object]
+        end
+
+        # second, search its class
         if caches.has_key?(object.class)
           log "lookup: %s => %s (cached)" % [object.class, caches[object.class] || 'nil']
           return caches[object.class]
         end
+
+        # finally, search ancestors of the class
         klass = object.class.ancestors.find{|klass|
           log "lookup:   %s = %s ... %s" % [object.class, klass, stores[klass]]
           stores.has_key?(klass)
