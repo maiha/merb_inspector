@@ -76,7 +76,21 @@ class DataMapper::ResourceInspector < Merb::Inspector
     end
 
     def column_value(record, p)
-      h(record.send p.name.to_s)
+      # first, search class prefixed method that user override
+      method = "#{Extlib::Inflection.demodulize(record.class.name)}_#{p.name}_column"
+      return send(method, record, p) if respond_to?(method, true)
+
+      # second, search method that user override
+      method = "#{p.name}_column"
+      return send(method, record, p) if respond_to?(method, true)
+
+      # finally, guess form from property type
+      value = record.send(p.name)
+      if p.type == ::DataMapper::Types::Text
+        value.to_s.split(/\r?\n/).map{|i| h(i.to_s)}.join("<BR>")
+      else
+        h(value.to_s)
+      end
     end
 
     def column_form(record, p)
@@ -88,7 +102,7 @@ class DataMapper::ResourceInspector < Merb::Inspector
       method = "#{p.name}_form"
       return send(method, record, p) if respond_to?(method, true)
 
-      # second, guess form from property type
+      # finally, guess form from property type
       if p.type == ::DataMapper::Types::Serial
         record.send p.name
       elsif p.type == ::DataMapper::Types::Text
