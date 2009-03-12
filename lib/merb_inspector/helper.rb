@@ -1,8 +1,10 @@
 module Merb
   class Inspector
     module Helper
-      def inspect(object = nil, options = {})
-        return h(super()) unless object
+      def inspect(*args)
+        return h(super()) if args.blank?
+        object  = args.shift
+        options = args.shift || {}
 
         options = options.is_a?(Hash) ? options : {:action=>options}
         options[:action]    ||= :show
