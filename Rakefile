@@ -5,7 +5,7 @@ require 'merb-core'
 require 'merb-core/tasks/merb'
 
 GEM_NAME    = "merb_inspector"
-GEM_VERSION = "0.2.6"
+GEM_VERSION = "0.2.7"
 AUTHOR      = "Maiha"
 EMAIL       = "maiha@wota.jp"
 HOMEPAGE    = "http://github.com/maiha/merb_inspector"
@@ -23,7 +23,7 @@ spec = Gem::Specification.new do |s|
   s.author = AUTHOR
   s.email = EMAIL
   s.homepage = HOMEPAGE
-  s.add_dependency('merb', '>= 1.0.7')
+  s.add_dependency('merb', '>= 1.0.8')
   s.require_path = 'lib'
   s.files = %w(LICENSE README Rakefile TODO) + Dir.glob("{lib,spec,inspectors,templates,mirror}/**/*")
   
