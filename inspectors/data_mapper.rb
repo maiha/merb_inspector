@@ -116,7 +116,7 @@ end
 
 class DataMapper::CollectionInspector < DataMapper::ResourceInspector
   builtin
-  model ::DataMapper::Collection
+  model ::DataMapper::Collection, ::DataMapper::Associations::OneToMany::Proxy 
 
   private
     def model
