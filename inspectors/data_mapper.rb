@@ -15,8 +15,18 @@ class DataMapper::ResourceInspector < Merb::Inspector
       @object.class
     end
 
+    def klass
+      @object.class
+    end
+
     def columns
-      model.properties
+      if @options[:only]
+        klass.properties.select{|p| @options[:only].map(&:to_s).include?(p.name.to_s)}
+      elsif @options[:except]
+        klass.properties.reject{|p| @options[:except].map(&:to_s).include?(p.name.to_s)}
+      else
+        klass.properties
+      end
     end
 
     def dom_id
@@ -123,8 +133,8 @@ class DataMapper::CollectionInspector < DataMapper::ResourceInspector
       @object.query.model
     end
 
-    def columns
-      @object.properties
+    def klass
+      @object
     end
 
     def options
