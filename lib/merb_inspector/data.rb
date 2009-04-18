@@ -2,7 +2,7 @@ module Merb
   class Inspector
     class Column                # Abstract
       class Delegate < StandardError; end
-      class Evaluated < Delegate; end
+      class NotDefined < Delegate; end
       class MethodFound < Delegate
         attr_reader :args
         def initialize(*args)
@@ -34,7 +34,7 @@ module Merb
         evaluate(record, "#{name}_value")
 
         # finally, guess form from property type
-        raise Evaluated, default_value(record)
+        default_value(record)
       end
 
       def form(record)
@@ -45,7 +45,7 @@ module Merb
         evaluate(record, "#{name}_form")
 
         # finally, guess form from property type
-        raise Evaluated, default_form(record)
+        default_form(record)
       end
 
       private
@@ -66,7 +66,7 @@ module Merb
         end
 
         def not_defined(method)
-          "[VirtualColumn] '#{method}' is not defined yet"
+          raise NotDefined, method
         end
     end
 

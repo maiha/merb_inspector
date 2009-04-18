@@ -117,16 +117,26 @@ class DataMapper::ResourceInspector < Merb::Inspector
       column.value(record)
     rescue Column::MethodFound => e
       __send__ *e.args
-    rescue Column::Evaluated => e
-      e.message
+    rescue Column::NotDefined => e
+      call_user_method(e.message, record, column)
     end
 
     def column_form(record, column)
       column.form(record)
     rescue Column::MethodFound => e
       __send__ *e.args
-    rescue Column::Evaluated => e
-      e.message
+    rescue Column::NotDefined => e
+      call_user_method(e.message, record, column)
+    end
+
+    def call_user_method(method, record, column)
+      method = method.to_sym
+      block  = @options[:columns][method] rescue nil
+      if block
+        block.call(record, column)
+      else
+        "[VirtualColumn] '#{method}' is not defined yet"
+      end
     end
 end
 
