@@ -3,7 +3,7 @@
   <thead>
     <tr>
 <%- columns.each do |p| -%>
-      <th><p><%= column_header(p) %></p></th>
+      <th><p><%= column_label(p) %></p></th>
 <%- end -%>
       <th></th>
     </tr>
@@ -16,17 +16,8 @@ tr_class += " #{list_row_class(record)}" if respond_to? :list_row_class
 -%>
     <tr class="record <%=tr_class%>">
 <%- columns.each do |p| -%>
-      <td><%=h column_value(record, p) %></td>
+      <td><%= column_value(record, p) %></td>
 <%- end -%>
-      <td>
-        <table class="logical">
-          <tr>
-            <td><%= link_to_show(record) %></td>
-            <td><%= link_to_edit(record) %></td>
-            <td><%# delete_button(article, "Delete #{article.title}") %></td>
-          </tr>
-        </table>
-      </td>
     </tr>
 <%- end -%>
   </tbody>

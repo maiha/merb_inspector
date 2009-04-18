@@ -10,6 +10,7 @@ if defined?(Merb::Plugins)
   
   Merb::BootLoader.before_app_loads do
     require "merb_inspector" / "inspector"
+    require "merb_inspector" / "data"
     require "merb_inspector" / "builtin"
     require "merb_inspector" / "manager"
     require "merb_inspector" / "helper"

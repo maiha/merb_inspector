@@ -20,13 +20,7 @@ class DataMapper::ResourceInspector < Merb::Inspector
     end
 
     def columns
-      if @options[:only]
-        klass.properties.select{|p| @options[:only].map(&:to_s).include?(p.name.to_s)}
-      elsif @options[:except]
-        klass.properties.reject{|p| @options[:except].map(&:to_s).include?(p.name.to_s)}
-      else
-        klass.properties
-      end
+      @columns ||= build_columns
     end
 
     def dom_id
@@ -66,60 +60,73 @@ class DataMapper::ResourceInspector < Merb::Inspector
     rescue Merb::Router::GenerationError
     end
 
-    def link_to_show(record = @object, label = 'Show', opts = {})
-      link_to label, resource(record), opts
+    def show_link_value(record, p, opts = {})
+      opts[:label] ||= "Show"
+      link_to opts[:label], resource(record), opts
     rescue Merb::Router::GenerationError
     end
 
-    def link_to_edit(record = @object, label = 'Edit', opts = {})
-      link_to label, resource(record, :edit), opts
+    def edit_link_value(record, p, opts = {})
+      opts[:label] ||= "Edit"
+      link_to opts[:label], resource(record, :edit), opts
+    rescue Merb::Router::GenerationError
+    end
+
+    def delete_link_value(record, p, opts = {})
+      opts[:label] ||= "Delete"
+      link_to opts[:label], resource(record, :delete), opts
     rescue Merb::Router::GenerationError
     end
 
     ######################################################################
     ### form builder for DataMapper
 
-    def column_header(p)
-      label = p.name.to_s
-      h(label)
-#       link_to label, "#", :onclick=>"return false;"
+    def default_columns
+      [LinkColumn.new(self, :show), LinkColumn.new(self, :edit)]
     end
 
-    def column_value(record, p)
-      # first, search class prefixed method that user override
-      method = "#{Extlib::Inflection.demodulize(record.class.name)}_#{p.name}_column"
-      return send(method, record, p) if respond_to?(method, true)
-
-      # second, search method that user override
-      method = "#{p.name}_column"
-      return send(method, record, p) if respond_to?(method, true)
-
-      # finally, guess form from property type
-      value = record.send(p.name)
-      if p.type == ::DataMapper::Types::Text
-        value.to_s.split(/\r?\n/).map{|i| h(i.to_s)}.join("<BR>")
+    def build_columns
+      if @options[:only]
+        cols = @options[:only].map{|name|
+          name = name.to_s.intern
+          klass.properties.find{|p| p.name == name} || name
+        }
+      elsif @options[:except]
+        cols = klass.properties.reject{|p| @options[:except].map(&:to_s).include?(p.name.to_s)} + default_columns
       else
-        h(value.to_s)
+        cols = klass.properties + default_columns
+      end
+
+      cols.map do |col|
+        case col
+        when ::DataMapper::Property
+          DMColumn.new(self, col)
+        when Column
+          col
+        else
+          VirtualColumn.new(self, col)
+        end
       end
     end
 
-    def column_form(record, p)
-      # first, search class prefixed method that user override
-      method = "#{Extlib::Inflection.demodulize(record.class.name)}_#{p.name}_form"
-      return send(method, record, p) if respond_to?(method, true)
+    def column_label(column)
+      column.label
+    end
 
-      # second, search method that user override
-      method = "#{p.name}_form"
-      return send(method, record, p) if respond_to?(method, true)
+    def column_value(record, column)
+      column.value(record)
+    rescue Column::MethodFound => e
+      __send__ *e.args
+    rescue Column::Evaluated => e
+      e.message
+    end
 
-      # finally, guess form from property type
-      if p.type == ::DataMapper::Types::Serial
-        record.send p.name
-      elsif p.type == ::DataMapper::Types::Text
-        text_area p.name
-      else
-        text_field p.name
-      end
+    def column_form(record, column)
+      column.form(record)
+    rescue Column::MethodFound => e
+      __send__ *e.args
+    rescue Column::Evaluated => e
+      e.message
     end
 end
 

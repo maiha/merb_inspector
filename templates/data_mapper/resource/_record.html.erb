@@ -4,7 +4,7 @@
   <tbody>
 <%- columns.each do |p| -%>
     <tr>
-      <th><%= column_header(p) %></th>
+      <th><%= column_label(p) %></th>
       <td><%= column_value(record, p) %></td>
     </tr>
 <%- end -%>
@@ -23,7 +23,7 @@
   <tbody>
 <%- columns.each do |p| -%>
     <tr>
-      <th><%= column_header(p) %></th>
+      <th><%= column_label(p) %></th>
       <td><%= column_form(record, p) %></td>
     </tr>
 <%- end -%>
