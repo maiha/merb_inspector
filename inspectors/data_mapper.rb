@@ -94,7 +94,7 @@ class DataMapper::ResourceInspector < Merb::Inspector
       elsif @options[:except]
         cols = klass.properties.reject{|p| @options[:except].map(&:to_s).include?(p.name.to_s)} + default_columns
       else
-        cols = klass.properties + default_columns
+        cols = klass.properties.to_a + default_columns
       end
 
       cols.map do |col|
