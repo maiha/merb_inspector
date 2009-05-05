@@ -2,11 +2,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{merb_inspector}
-  s.version = "0.2.9"
+  s.version = "0.3.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Maiha"]
-  s.date = %q{2009-04-18}
+  s.date = %q{2009-05-05}
   s.description = %q{Merb plugin that provides powerful 'inspect' helper method}
   s.email = %q{maiha@wota.jp}
   s.extra_rdoc_files = ["README", "LICENSE", "TODO"]
