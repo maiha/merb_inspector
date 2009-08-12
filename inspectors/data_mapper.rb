@@ -85,16 +85,24 @@ class DataMapper::ResourceInspector < Merb::Inspector
       [LinkColumn.new(self, :show), LinkColumn.new(self, :edit)]
     end
 
+    def find_column_by_name(name)
+      name = name.to_s.intern
+      (klass.properties.to_a + default_columns).each do |col|
+        return col if col.name == name
+      end
+      return nil
+    end
+
     def build_columns
       if @options[:only]
-        cols = @options[:only].map{|name|
-          name = name.to_s.intern
-          klass.properties.find{|p| p.name == name} || name
-        }
-      elsif @options[:except]
-        cols = klass.properties.reject{|p| @options[:except].map(&:to_s).include?(p.name.to_s)} + default_columns
+        valids = Array(@options[:only]).flatten.compact.map(&:to_sym)
+        cols = valids.map{|name| find_column_by_name(name) || name}
       else
         cols = klass.properties.to_a + default_columns
+        if @options[:except]
+          invalids = Array(@options[:except]).flatten.compact.map(&:to_sym)
+          cols = cols.reject{|col| invalids.include?(col.name)}
+        end
       end
 
       cols.map do |col|

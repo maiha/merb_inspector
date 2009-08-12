@@ -18,10 +18,6 @@ module Merb
         @name    = name.to_s.intern
       end
 
-      def name
-        @name.to_s
-      end
-
       def label(*)
         name
       end
