@@ -66,7 +66,7 @@ module Merb
       end
 
       def execute
-        if self.class.lead_options
+        if lead?
           wrapped_main
         else
           main
@@ -80,6 +80,15 @@ module Merb
       def lead_size
         sizes = Array((self.class.lead_options || {})[:size]).compact
         sizes[level-1] || sizes[-1] || 15
+      end
+
+      def lead?
+        case @options[:lead]
+        when NilClass
+          self.class.lead_options
+        else
+          !! @options[:lead]
+        end
       end
 
       def lead

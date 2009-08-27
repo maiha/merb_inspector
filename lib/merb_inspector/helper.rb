@@ -16,7 +16,7 @@ module Merb
         options[:max_level] ||= 3
 
         # validate keys
-        valid_keys   = [:action, :level, :max_level, :only, :except, :columns]
+        valid_keys   = [:action, :level, :max_level, :only, :except, :columns, :lead]
         unknown_keys = options.keys - valid_keys
         if !unknown_keys.blank?
           return h("[INSPECTOR ERROR] Unknown key(s): %s" % unknown_keys.inspect)
