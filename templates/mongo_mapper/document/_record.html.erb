@@ -1,0 +1,41 @@
+<div id="<%=dom_id%>">
+<div id="<%=dom_id%>_show" class="reversible record show" style="display:<%= (@mode == :edit) ? 'none' : 'display' %>">
+<table>
+  <tbody>
+<%- columns.each do |p| -%>
+    <tr>
+      <th><%= column_label(p) %></th>
+      <td><%= column_value(record, p) %></td>
+    </tr>
+<%- end -%>
+    <tr>
+      <td colspan=2 align=center>
+        <%= link_to "edit", "#", :onclick=>toggle %>
+      </td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div id="<%=dom_id%>_edit" class="reversible record edit" style="display:<%= (@mode == :edit)  ? 'display' : 'none' %>">
+<%= form_for record, :action=>save_action do %>
+<table>
+  <tbody>
+<%- columns.each do |p| -%>
+    <tr>
+      <th><%= column_label(p) %></th>
+      <td><%= column_form(record, p) %></td>
+    </tr>
+<%- end -%>
+    <tr>
+      <td colspan=2 align=center>
+        <%= submit (record.new_record? ? "create" : "update").t %>
+        <%= link_to "cancel", "#", :onclick=>toggle unless record.new_record? %>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<% end =%>
+</div>
+</div>
+
